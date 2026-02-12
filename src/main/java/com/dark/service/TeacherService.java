@@ -92,4 +92,30 @@ public class TeacherService {
             System.out.println("Error adding student: " + e.getMessage());
         }
     }
+    public void viewAllStudentsAndCourses() {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            // SIMPLIFIED: Just "from EntityName" works in Hibernate
+            List<Student> students = em.createQuery("from Student", Student.class).getResultList();
+
+            if (students.isEmpty()) {
+                System.out.println("No students found.");
+                return;
+            }
+
+            System.out.println("\n--- All Students & Registered Courses ---");
+            for (Student s : students) {
+                System.out.println("Student: " + s.getName() + " (" + s.getRollNumber() + ")");
+
+                // Using a simple one-liner check for cleaner code
+                if (s.getRegisteredCourses().isEmpty()) {
+                    System.out.println("   - No courses registered.");
+                } else {
+                    s.getRegisteredCourses().forEach(c ->
+                            System.out.println("   - " + c.getCourseName() + " (" + c.getCourseId() + ")")
+                    );
+                }
+                System.out.println("-----------------------------------");
+            }
+        }
+    }
 }
