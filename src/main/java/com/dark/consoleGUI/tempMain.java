@@ -1,4 +1,4 @@
-package com.dark.origin;
+package com.dark.consoleGUI;
 
 import com.dark.entity.Course;
 import com.dark.entity.Student;
