@@ -92,6 +92,15 @@ public class TeacherService {
             System.out.println("Error adding student: " + e.getMessage());
         }
     }
+    public List<Student> getAllStudentsWithCourses() {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return em.createQuery(
+                    "SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.registeredCourses",
+                    Student.class
+            ).getResultList();
+        }
+    }
+
     public void viewAllStudentsAndCourses() {
         try (EntityManager em = JPAUtil.getEntityManager()) {
             // SIMPLIFIED: Just "from EntityName" works in Hibernate
