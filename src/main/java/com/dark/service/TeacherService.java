@@ -127,4 +127,10 @@ public class TeacherService {
             }
         }
     }
+    // Add this to src/main/java/com/dark/service/TeacherService.java
+    public List<Student> getAllStudents() {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return em.createQuery("FROM Student", Student.class).getResultList();
+        }
+    }
 }

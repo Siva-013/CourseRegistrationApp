@@ -49,4 +49,38 @@ public class StudentService {
             return em.createQuery("SELECT c FROM Course c", Course.class).getResultList();
         }
     }
+    // ... existing registerStudentForCourse code ...
+
+    // --- NEW METHOD: DROP COURSE ---
+    public String dropCourse(String rollNumber, String courseId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        String result = "";
+
+        try {
+            tx.begin();
+            Student student = em.find(Student.class, rollNumber);
+            Course course = em.find(Course.class, courseId);
+
+            if (student != null && course != null) {
+                if (student.getRegisteredCourses().contains(course)) {
+                    student.getRegisteredCourses().remove(course);
+                    em.merge(student);
+                    result = "Course Dropped Successfully";
+                } else {
+                    result = "You are not registered for this course.";
+                }
+            } else {
+                result = "Student or Course not found.";
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            System.out.println("Error in registerStudentForCourse : " + e.getMessage() );
+            result = "Error dropping course.";
+        } finally {
+            em.close();
+        }
+        return result;
+    }
 }
