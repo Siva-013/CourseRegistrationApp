@@ -3,6 +3,7 @@ package com.dark.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Cacheable
 public class Course {
     @Id
     @Column(name = "course_id")
@@ -15,7 +16,9 @@ public class Course {
         this.courseId = courseId;
         this.courseName = courseName;
     }
-    public Course() {}
+
+    public Course() {
+    }
 
     @Override
     public String toString() {
@@ -37,10 +40,13 @@ public class Course {
     public String getCourseName() {
         return courseName;
     }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Course course = (Course) o;
         return courseId != null && courseId.equals(course.courseId);
     }

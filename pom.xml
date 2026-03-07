@@ -32,6 +32,49 @@
           <artifactId>mysql-connector-j</artifactId>
           <version>8.2.0</version>
       </dependency>
+      <!-- HikariCP connection pool + Hibernate bridge -->
+      <dependency>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+          <version>5.1.0</version>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate.orm</groupId>
+          <artifactId>hibernate-hikaricp</artifactId>
+          <version>6.4.0.Final</version>
+      </dependency>
+      <!-- Hibernate L2 cache with EhCache -->
+      <dependency>
+          <groupId>org.hibernate.orm</groupId>
+          <artifactId>hibernate-jcache</artifactId>
+          <version>6.4.0.Final</version>
+      </dependency>
+      <dependency>
+          <groupId>org.ehcache</groupId>
+          <artifactId>ehcache</artifactId>
+          <version>3.10.8</version>
+          <classifier>jakarta</classifier>
+          <exclusions>
+              <exclusion>
+                  <groupId>javax.xml.bind</groupId>
+                  <artifactId>jaxb-api</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.glassfish.jaxb</groupId>
+                  <artifactId>jaxb-runtime</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <version>4.0.2</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jaxb</groupId>
+          <artifactId>jaxb-runtime</artifactId>
+          <version>4.0.5</version>
+      </dependency>
 
   </dependencies>
 

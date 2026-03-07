@@ -5,14 +5,46 @@
         <class>com.dark.entity.Student</class>
         <class>com.dark.entity.Course</class>
 
+        <!-- Enable L2 cache for annotated entities -->
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+
         <properties>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test?sslMode=VERIFY_IDENTITY"/>
-
+            <!-- ── Connection (TiDB Cloud MySQL) ── -->
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:mysql://gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test?sslMode=VERIFY_IDENTITY&amp;useServerPrepStmts=true&amp;cachePrepStmts=true&amp;prepStmtCacheSize=250&amp;prepStmtCacheSqlLimit=2048"/>
             <property name="jakarta.persistence.jdbc.user" value="tg1d7ircwXhzquW.root"/>
-
             <property name="jakarta.persistence.jdbc.password" value="uKYTnJdqiGTL3TkD"/>
 
-            <property name="hibernate.hbm2ddl.auto" value="update"/> <property name="hibernate.show_sql" value="true"/>
+            <!-- ── HikariCP Connection Pool ── -->
+            <property name="hibernate.connection.provider_class"
+                      value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
+            <property name="hibernate.hikari.minimumIdle" value="2"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="5"/>
+            <property name="hibernate.hikari.idleTimeout" value="60000"/>
+            <property name="hibernate.hikari.connectionTimeout" value="10000"/>
+            <property name="hibernate.hikari.maxLifetime" value="300000"/>
+
+            <!-- ── Hibernate Core ── -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+
+            <!-- ── Batching (reduces roundtrips) ── -->
+            <property name="hibernate.jdbc.batch_size" value="15"/>
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
+            <property name="hibernate.jdbc.batch_versioned_data" value="true"/>
+            <property name="hibernate.default_batch_fetch_size" value="16"/>
+
+            <!-- ── L2 Cache (EhCache via JCache) ── -->
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class"
+                      value="org.hibernate.cache.jcache.JCacheRegionFactory"/>
+            <property name="hibernate.javax.cache.missing_cache_strategy" value="create"/>
+
+            <!-- ── Generate statistics (disable in prod) ── -->
+            <property name="hibernate.generate_statistics" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

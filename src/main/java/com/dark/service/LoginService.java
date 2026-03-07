@@ -12,6 +12,8 @@ public class LoginService {
             Student s = em.find(Student.class, rollNumber);
 
             if (s != null && s.getPassword().equals(password)) {
+                // Force-initialize lazy courses while EM is open
+                s.getRegisteredCourses().size();
                 return s; // Login Success
             }
             return null; // Login Failed

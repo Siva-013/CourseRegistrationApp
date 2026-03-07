@@ -96,4 +96,27 @@ public class StudentService {
         }
         return result;
     }
+
+    public String changePassword(String rollNumber, String oldPassword, String newPassword) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Student student = em.find(Student.class, rollNumber);
+            if (student == null)
+                return "Student not found.";
+            if (!student.getPassword().equals(oldPassword))
+                return "Old password is incorrect.";
+            student.setPassword(newPassword);
+            em.merge(student);
+            tx.commit();
+            return "Password changed successfully!";
+        } catch (Exception e) {
+            if (tx.isActive())
+                tx.rollback();
+            return "Error changing password.";
+        } finally {
+            em.close();
+        }
+    }
 }

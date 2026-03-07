@@ -3,8 +3,10 @@ package com.dark.entity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
+@Cacheable
 public class Student {
     @Id
     @Column(name = "roll_no")
@@ -14,12 +16,9 @@ public class Student {
     private String password;
 
     // Join Table for Many-to-Many
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "student_course",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "student_course", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @BatchSize(size = 16)
     private List<Course> registeredCourses = new ArrayList<>();
 
     public String getRollNumber() {
@@ -60,5 +59,7 @@ public class Student {
         this.password = password;
         this.registeredCourses = registeredCourses;
     }
-    public Student() {}
+
+    public Student() {
+    }
 }

@@ -29,7 +29,8 @@ public class TeacherService {
             System.out.println("Course Added: " + courseName);
 
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) tx.rollback();
+            if (tx != null && tx.isActive())
+                tx.rollback();
             System.out.println("Exception in addCourse: " + e.getMessage());
         }
     }
@@ -53,7 +54,8 @@ public class TeacherService {
             tx.commit();
 
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) tx.rollback();
+            if (tx != null && tx.isActive())
+                tx.rollback();
             System.out.println("Exception in removeCourse: " + e.getMessage());
         }
     }
@@ -88,16 +90,17 @@ public class TeacherService {
             System.out.println("Student Added Successfully: " + name);
 
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) tx.rollback();
+            if (tx != null && tx.isActive())
+                tx.rollback();
             System.out.println("Error adding student: " + e.getMessage());
         }
     }
+
     public List<Student> getAllStudentsWithCourses() {
         try (EntityManager em = JPAUtil.getEntityManager()) {
             return em.createQuery(
                     "SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.registeredCourses",
-                    Student.class
-            ).getResultList();
+                    Student.class).getResultList();
         }
     }
 
@@ -119,18 +122,39 @@ public class TeacherService {
                 if (s.getRegisteredCourses().isEmpty()) {
                     System.out.println("   - No courses registered.");
                 } else {
-                    s.getRegisteredCourses().forEach(c ->
-                            System.out.println("   - " + c.getCourseName() + " (" + c.getCourseId() + ")")
-                    );
+                    s.getRegisteredCourses().forEach(
+                            c -> System.out.println("   - " + c.getCourseName() + " (" + c.getCourseId() + ")"));
                 }
                 System.out.println("-----------------------------------");
             }
         }
     }
+
     // Add this to src/main/java/com/dark/service/TeacherService.java
     public List<Student> getAllStudents() {
         try (EntityManager em = JPAUtil.getEntityManager()) {
             return em.createQuery("FROM Student", Student.class).getResultList();
+        }
+    }
+
+    public List<Student> getStudentsPaginated(int offset, int limit) {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return em.createQuery("FROM Student", Student.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        }
+    }
+
+    public Student searchStudentByRoll(String rollNumber) {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return em.find(Student.class, rollNumber);
+        }
+    }
+
+    public long getStudentCount() {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return em.createQuery("SELECT COUNT(s) FROM Student s", Long.class).getSingleResult();
         }
     }
 }
